@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark" data-accent="blue" data-profile="default">
 <head>
@@ -224,9 +223,6 @@ main{flex:1;max-width:1240px;width:100%;margin:0 auto;padding:26px 22px 80px}
 .rl-summary .row{display:flex;justify-content:space-between}
 .rl-summary .row span:first-child{color:var(--tx3)}
 .rl-summary .row b{color:var(--gd);font-variant-numeric:tabular-nums}
-.rl-go{width:100%;padding:14px;border-radius:12px;font-weight:900;font-size:14px;background:linear-gradient(140deg,#26d97f,#1eb869);color:#041a0e;box-shadow:0 8px 22px rgba(38,217,127,.3);transition:.2s}
-.rl-go:hover{transform:translateY(-1px);filter:brightness(1.08)}
-.rl-go:disabled{opacity:.5;cursor:not-allowed;transform:none;filter:none}
 .rl-history{margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .rl-hi{padding:5px 10px;border-radius:8px;font-size:11px;font-weight:900;font-variant-numeric:tabular-nums}
 .rl-hi.x2{background:rgba(77,139,255,.16);color:#4d8bff}
@@ -592,29 +588,6 @@ html[data-theme="light"] .ex-top{background:rgba(255,255,255,.9)}
 </head>
 <body>
 
-<script>
-/* ====== ЗАЩИТА ОТ КРАЖИ КОДА ====== */
-(function(){
-  // Замени на свои домены. Оставь localhost и file:// для тестов
-  var ALLOWED=[
-    'localhost','127.0.0.1','',
-    'ТВОЙ_НИК.github.io',              // например: holiks.github.io
-    'ТВОЙ_ДОМЕН.com','www.ТВОЙ_ДОМЕН.com'
-  ];
-  var h=location.hostname;
-  var ok=false;
-  for(var i=0;i<ALLOWED.length;i++){
-    if(h===ALLOWED[i]){ok=true;break}
-  }
-  // Также разрешаем file:// (локальный тест)
-  if(location.protocol==='file:')ok=true;
-  if(!ok){
-    document.documentElement.innerHTML='<body style="background:#000;color:#ff5c7c;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;padding:40px"><div><h1 style="font-size:32px;margin-bottom:20px">⛔ Несанкционированное использование</h1><p style="opacity:.7">Этот код защищён авторским правом. Запуск на стороннем домене запрещён.</p></div></body>';
-    throw new Error('Forbidden host: '+h);
-  }
-})();
-</script>
-
 <!-- AUTH -->
 <div class="auth" id="authScreen">
 <div class="auth-box">
@@ -633,7 +606,7 @@ html[data-theme="light"] .ex-top{background:rgba(255,255,255,.9)}
 <div class="field"><label>Имя и фамилия</label><input type="text" id="regName" placeholder="Иван Иванов"></div>
 <div class="field"><label>Логин</label><input type="text" id="regUser" placeholder="минимум 3 символа"></div>
 <div class="field"><label>Пароль</label><input type="password" id="regPass" placeholder="минимум 6 символов"></div>
-<div class="field"><label>Стартовый баланс HSC</label><input type="number" id="regBalance" value="500"></div>
+<div class="field"><label>Стартовый баланс HSC</label><input type="number" id="regBalance" value="5000"></div>
 <button class="btn" onclick="doRegister()">Открыть счёт</button>
 <button class="btn2" onclick="enterGuest()">Продолжить как гость</button>
 </div>
@@ -704,7 +677,7 @@ html[data-theme="light"] .ex-top{background:rgba(255,255,255,.9)}
     <div class="ex-sym">
       <span class="nm">HSC / RUB</span>
       <span class="badge">SPOT</span>
-      <span class="p" id="exSymPrice">12.40</span>
+      <span class="p" id="exSymPrice">500</span>
       <span class="chg up" id="exSymChange">+0.00%</span>
     </div>
     <div class="ex-spacer"></div>
@@ -1068,9 +1041,9 @@ function uid(){return 'tx'+Date.now()+Math.random().toString(36).slice(2,7)}
 
 function enterGuest(){var num=genCardNumber();var g={name:'Гость',login:'guest_'+Date.now(),pass:'',balance:10000,rub:500000,card:num,cardStyle:'midnight',cardRarity:getRarity(num),account:genAccount(),createdAt:Date.now(),transactions:[{id:uid(),type:'in',category:'other',name:'Приветственный бонус',amount:10000,date:Date.now(),status:'Выполнено',recipient:'Гость',comment:'Гостевой режим'}],isGuest:true,lastSpin:0,casesOpened:0,limitOrders:[],rocketBest:0};state.guestSession=g;saveState();loginUser(g);toast('Гостевой режим',true)}
 
-function doRegister(){try{var name=(document.getElementById('regName').value||'').trim();var login=(document.getElementById('regUser').value||'').trim().toLowerCase();var pass=document.getElementById('regPass').value||'';var bal=parseFloat(document.getElementById('regBalance').value);bal=isNaN(bal)?500:Math.max(0,bal);if(!name)return err('Введите имя');if(login.length<3)return err('Логин минимум 3');if(pass.length<6)return err('Пароль минимум 6');for(var i=0;i<state.users.length;i++)if(state.users[i].login===login)return err('Логин занят');var num=genCardNumber();var u={name:name,login:login,pass:pass,balance:bal,rub:100000,card:num,cardStyle:'midnight',cardRarity:getRarity(num),account:genAccount(),createdAt:Date.now(),transactions:[{id:uid(),type:'in',category:'other',name:'Открытие счёта HS BANK',amount:bal,date:Date.now(),status:'Выполнено',recipient:name,comment:'Стартовый баланс'}],lastSpin:0,casesOpened:0,limitOrders:[],rocketBest:0};state.users.push(u);state.session=login;state.guestSession=null;saveState();loginUser(u)}catch(e){console.error(e);err('Ошибка: '+e.message)}}
+function doRegister(){try{var name=(document.getElementById('regName').value||'').trim();var login=(document.getElementById('regUser').value||'').trim().toLowerCase();var pass=document.getElementById('regPass').value||'';var bal=parseFloat(document.getElementById('regBalance').value);bal=isNaN(bal)?5000:Math.max(0,bal);if(!name)return err('Введите имя');if(login.length<3)return err('Логин минимум 3');if(pass.length<6)return err('Пароль минимум 6');for(var i=0;i<state.users.length;i++)if(state.users[i].login===login)return err('Логин занят');var num=genCardNumber();var u={name:name,login:login,pass:pass,balance:bal,rub:500000,card:num,cardStyle:'midnight',cardRarity:getRarity(num),account:genAccount(),createdAt:Date.now(),transactions:[{id:uid(),type:'in',category:'other',name:'Открытие счёта HS BANK',amount:bal,date:Date.now(),status:'Выполнено',recipient:name,comment:'Стартовый баланс'}],lastSpin:0,casesOpened:0,limitOrders:[],rocketBest:0};state.users.push(u);state.session=login;state.guestSession=null;saveState();loginUser(u)}catch(e){console.error(e);err('Ошибка: '+e.message)}}
 
-function doLogin(){try{var login=(document.getElementById('loginUser').value||'').trim().toLowerCase();var pass=document.getElementById('loginPass').value||'';if(!login||!pass)return err('Введите логин и пароль');var u=null;for(var i=0;i<state.users.length;i++)if(state.users[i].login===login){u=state.users[i];break}if(!u)return err('Не найден');if(u.pass!==pass)return err('Неверный пароль');if(typeof u.rub!=='number')u.rub=100000;if(!u.limitOrders)u.limitOrders=[];if(typeof u.casesOpened!=='number')u.casesOpened=0;if(typeof u.rocketBest!=='number')u.rocketBest=0;state.session=login;state.guestSession=null;saveState();loginUser(u)}catch(e){console.error(e);err('Ошибка: '+e.message)}}
+function doLogin(){try{var login=(document.getElementById('loginUser').value||'').trim().toLowerCase();var pass=document.getElementById('loginPass').value||'';if(!login||!pass)return err('Введите логин и пароль');var u=null;for(var i=0;i<state.users.length;i++)if(state.users[i].login===login){u=state.users[i];break}if(!u)return err('Не найден');if(u.pass!==pass)return err('Неверный пароль');if(typeof u.rub!=='number')u.rub=500000;if(!u.limitOrders)u.limitOrders=[];if(typeof u.casesOpened!=='number')u.casesOpened=0;if(typeof u.rocketBest!=='number')u.rocketBest=0;state.session=login;state.guestSession=null;saveState();loginUser(u)}catch(e){console.error(e);err('Ошибка: '+e.message)}}
 
 function loginUser(u){try{document.getElementById('authScreen').style.display='none';document.getElementById('app').classList.add('on');document.getElementById('chatFab').style.display='grid';seedHistory();renderAll();startLiveTickers();['loginUser','loginPass','regName','regUser','regPass'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=''});err('');switchAuth('login');toast('Добро пожаловать, '+u.name,true)}catch(e){console.error(e);alert('Ошибка: '+e.message)}}
 
@@ -1118,7 +1091,7 @@ function closeModal(){document.getElementById('overlay').classList.remove('on')}
 var toastTimer;
 function toast(msg,ok){if(ok===undefined)ok=true;var t=document.getElementById('toast');if(!t)return;t.textContent=(ok?'✓ ':'⚠ ')+msg;t.className='tst on '+(ok?'ok':'err');clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.className='tst '+(ok?'ok':'err')},2500)}
 
-/* ========= ROULETTE — 6 больших секторов ========= */
+/* ROULETTE */
 var RL_SECTORS=[
   {mult:2,weight:35,color:'#4d8bff',label:'x2'},
   {mult:3,weight:25,color:'#2ee6a8',label:'x3'},
@@ -1132,172 +1105,22 @@ var rlSpinning=false;
 var rlHistory=[];
 var rlAngle=0;
 
-function rlBuild(){
-  var grid=document.getElementById('rlBetsGrid');
-  if(!grid||grid.children.length>0)return;
-  var h='';
-  RL_SECTORS.forEach(function(s){
-    h+='<div class="rl-bet-card x'+s.mult+'" id="rlCard'+s.mult+'" onclick="rlAddBet('+s.mult+')">'+
-      '<div class="k">Ставка на</div>'+
-      '<div class="mult x'+s.mult+'v">'+s.label+'</div>'+
-      '<div class="stake">Ставка: <b id="rlStake'+s.mult+'">0</b> HSC</div>'+
-      '</div>';
-  });
-  grid.innerHTML=h;
-}
+function rlBuild(){var grid=document.getElementById('rlBetsGrid');if(!grid||grid.children.length>0)return;var h='';RL_SECTORS.forEach(function(s){h+='<div class="rl-bet-card x'+s.mult+'" id="rlCard'+s.mult+'" onclick="rlAddBet('+s.mult+')"><div class="k">Ставка на</div><div class="mult x'+s.mult+'v">'+s.label+'</div><div class="stake">Ставка: <b id="rlStake'+s.mult+'">0</b> HSC</div></div>'});grid.innerHTML=h}
 function rlSetBet(v){document.getElementById('rlBetAmount').value=v}
-function rlAddBet(mult){
-  if(rlSpinning)return;
-  var amt=parseFloat(document.getElementById('rlBetAmount').value)||0;
-  if(amt<=0)return toast('Введите сумму ставки',false);
-  var u=getUser();if(!u)return;
-  var currentTotal=0;for(var k in rlBets)currentTotal+=rlBets[k];
-  if(currentTotal+amt>u.balance)return toast('Недостаточно HSC',false);
-  rlBets[mult]+=amt;
-  rlRenderBets();rlUpdateAvail();
-}
+function rlAddBet(mult){if(rlSpinning)return;var amt=parseFloat(document.getElementById('rlBetAmount').value)||0;if(amt<=0)return toast('Введите сумму ставки',false);var u=getUser();if(!u)return;var currentTotal=0;for(var k in rlBets)currentTotal+=rlBets[k];if(currentTotal+amt>u.balance)return toast('Недостаточно HSC',false);rlBets[mult]+=amt;rlRenderBets();rlUpdateAvail()}
 function rlClearAll(){for(var k in rlBets)rlBets[k]=0;rlRenderBets()}
-function rlRenderBets(){
-  RL_SECTORS.forEach(function(s){
-    var el=document.getElementById('rlStake'+s.mult);
-    if(el)el.textContent=rlBets[s.mult].toLocaleString('ru-RU',{maximumFractionDigits:0});
-    var card=document.getElementById('rlCard'+s.mult);
-    if(card)card.classList.toggle('active',rlBets[s.mult]>0);
-  });
-  var total=0;for(var k in rlBets)total+=rlBets[k];
-  var sum=document.getElementById('rlSummary');
-  if(sum){
-    var h='<div class="row"><span>Всего ставок:</span><b>'+total.toLocaleString('ru-RU')+' HSC</b></div>';
-    RL_SECTORS.forEach(function(s){
-      if(rlBets[s.mult]>0){
-        h+='<div class="row"><span>'+s.label+':</span><b>'+rlBets[s.mult].toLocaleString('ru-RU')+' → '+((rlBets[s.mult]*s.mult)).toLocaleString('ru-RU')+'</b></div>';
-      }
-    });
-    sum.innerHTML=h;
-  }
-  var tot=document.getElementById('rlTotal');
-  if(tot)tot.textContent=total.toLocaleString('ru-RU',{maximumFractionDigits:0});
-}
+function rlRenderBets(){RL_SECTORS.forEach(function(s){var el=document.getElementById('rlStake'+s.mult);if(el)el.textContent=rlBets[s.mult].toLocaleString('ru-RU',{maximumFractionDigits:0});var card=document.getElementById('rlCard'+s.mult);if(card)card.classList.toggle('active',rlBets[s.mult]>0)});var total=0;for(var k in rlBets)total+=rlBets[k];var sum=document.getElementById('rlSummary');if(sum){var h='<div class="row"><span>Всего ставок:</span><b>'+total.toLocaleString('ru-RU')+' HSC</b></div>';RL_SECTORS.forEach(function(s){if(rlBets[s.mult]>0){h+='<div class="row"><span>'+s.label+':</span><b>'+rlBets[s.mult].toLocaleString('ru-RU')+' → '+((rlBets[s.mult]*s.mult)).toLocaleString('ru-RU')+'</b></div>'}});sum.innerHTML=h}var tot=document.getElementById('rlTotal');if(tot)tot.textContent=total.toLocaleString('ru-RU',{maximumFractionDigits:0})}
 function rlUpdateAvail(){var u=getUser();if(!u)return;var el=document.getElementById('rlAvail');if(el)el.textContent=Number(u.balance).toLocaleString('ru-RU',{maximumFractionDigits:2})+' HSC'}
-
-function rlDrawWheel(){
-  var svg=document.getElementById('rlSvg');if(!svg)return;
-  var cx=100,cy=100,r=96;
-  var total=0; RL_SECTORS.forEach(function(s){total+=s.weight});
-  
-  var html='<circle cx="100" cy="100" r="99" fill="#0a0c12"/>';
-  var start=-90;
-  
-  RL_SECTORS.forEach(function(s){
-    var arc=(s.weight/total)*360;
-    var a0=start*Math.PI/180, a1=(start+arc)*Math.PI/180;
-    var x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
-    var x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
-    var la=arc>180?1:0;
-    
-    // Сектор
-    html+='<path d="M '+cx+' '+cy+' L '+x0+' '+y0+' A '+r+' '+r+' 0 '+la+' 1 '+x1+' '+y1+' Z" fill="'+s.color+'" stroke="#0a0e1a" stroke-width="2"/>';
-    
-    // Крупный текст — на расстоянии 0.65R от центра
-    var midDeg=start+arc/2;
-    var midRad=midDeg*Math.PI/180;
-    var tx=cx+(r*0.6)*Math.cos(midRad);
-    var ty=cy+(r*0.6)*Math.sin(midRad);
-    var rot=midDeg;
-    if(midDeg>90&&midDeg<270)rot=midDeg+180;
-    
-    html+='<text x="'+tx+'" y="'+ty+'" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="22" font-weight="900" font-family="-apple-system,Segoe UI,sans-serif" transform="rotate('+rot+' '+tx+' '+ty+')" style="text-shadow:0 2px 8px rgba(0,0,0,.7);paint-order:stroke;stroke:rgba(0,0,0,.3);stroke-width:3px">'+s.label+'</text>';
-    
-    start+=arc;
-  });
-  
-  html+='<circle cx="100" cy="100" r="30" fill="#08090d" stroke="#ffc94d" stroke-width="2"/>';
-  svg.innerHTML=html;
-}
-
+function rlDrawWheel(){var svg=document.getElementById('rlSvg');if(!svg)return;var cx=100,cy=100,r=96;var total=0;RL_SECTORS.forEach(function(s){total+=s.weight});var html='<circle cx="100" cy="100" r="99" fill="#0a0c12"/>';var start=-90;RL_SECTORS.forEach(function(s){var arc=(s.weight/total)*360;var a0=start*Math.PI/180,a1=(start+arc)*Math.PI/180;var x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0);var x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);var la=arc>180?1:0;html+='<path d="M '+cx+' '+cy+' L '+x0+' '+y0+' A '+r+' '+r+' 0 '+la+' 1 '+x1+' '+y1+' Z" fill="'+s.color+'" stroke="#0a0e1a" stroke-width="2"/>';var midDeg=start+arc/2;var midRad=midDeg*Math.PI/180;var tx=cx+(r*0.6)*Math.cos(midRad);var ty=cy+(r*0.6)*Math.sin(midRad);var rot=midDeg;if(midDeg>90&&midDeg<270)rot=midDeg+180;html+='<text x="'+tx+'" y="'+ty+'" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="22" font-weight="900" font-family="-apple-system,Segoe UI,sans-serif" transform="rotate('+rot+' '+tx+' '+ty+')" style="text-shadow:0 2px 8px rgba(0,0,0,.7);paint-order:stroke;stroke:rgba(0,0,0,.3);stroke-width:3px">'+s.label+'</text>';start+=arc});html+='<circle cx="100" cy="100" r="30" fill="#08090d" stroke="#ffc94d" stroke-width="2"/>';svg.innerHTML=html}
 function rlRenderHistory(){var box=document.getElementById('rlHistory');if(!box)return;var h='';for(var i=0;i<rlHistory.length;i++){var m=rlHistory[i];h+='<div class="rl-hi x'+m+'">x'+m+'</div>'}box.innerHTML=h}
 function rlRenderAll(){rlBuild();rlRenderBets();rlUpdateAvail();rlRenderHistory()}
 function rlPick(){var total=0;RL_SECTORS.forEach(function(s){total+=s.weight});var r=Math.random()*total,acc=0;for(var i=0;i<RL_SECTORS.length;i++){acc+=RL_SECTORS[i].weight;if(r<=acc)return RL_SECTORS[i]}return RL_SECTORS[0]}
 function rlStop(){rlSpinning=false}
-
-function rlConfirm(){
-  if(rlSpinning)return;
-  var total=0;for(var k in rlBets)total+=rlBets[k];
-  if(total<=0)return toast('Поставь хотя бы на один сектор',false);
-  var u=getUser();if(!u)return;
-  if(total>u.balance)return toast('Недостаточно HSC',false);
-  u.balance-=total;saveUser();
-  renderBalance();rlUpdateAvail();
-  rlSpinning=true;
-  var btn=document.getElementById('rlSpinBtn');
-  btn.disabled=true;btn.textContent='КРУТИТСЯ...';
-  
-  var result=rlPick();
-  // Считаем угол остановки
-  var totalW=0;RL_SECTORS.forEach(function(s){totalW+=s.weight});
-  var start=-90;
-  var center=0;
-  var arcLen=0;
-  for(var i=0;i<RL_SECTORS.length;i++){
-    var arc=(RL_SECTORS[i].weight/totalW)*360;
-    if(RL_SECTORS[i].mult===result.mult){
-      center = start+arc/2;
-      arcLen = arc;
-      break;
-    }
-    start+=arc;
-  }
-  // Чтобы сектор center оказался на указателе сверху (-90°): поворачиваем на -(center+90)
-  var spins=8+Math.floor(Math.random()*4);
-  var jitter=(Math.random()-0.5)*(arcLen*0.5);
-  var targetAngle=spins*360 - (center+90) + jitter;
-  rlAngle+=targetAngle;
-  
-  var wheel=document.getElementById('rlWheel');
-  wheel.style.transition='transform 5s cubic-bezier(.17,.67,.32,1.02)';
-  wheel.style.transform='rotate('+rlAngle+'deg)';
-  
-  setTimeout(function(){
-    rlSpinning=false;
-    btn.disabled=false;btn.textContent='КРУТИТЬ';
-    
-    var won=rlBets[result.mult];
-    var totalWon=won*result.mult;
-    var net=totalWon-total;
-    
-    if(won>0){
-      u.balance+=totalWon;
-      addTx({type:'in',category:'roulette',name:'Рулетка: выпало '+result.label+' (ставка '+won+' HSC)',amount:totalWon,date:Date.now(),status:'Выигрыш',recipient:u.name,comment:'x'+result.mult+' · всего ставил '+total+' HSC'});
-      saveUser();
-      toast('🎉 Выпало '+result.label+'! Выиграл '+totalWon.toLocaleString('ru-RU')+' HSC',true);
-    }else{
-      addTx({type:'out',category:'roulette',name:'Рулетка: выпало '+result.label,amount:total,date:Date.now(),status:'Проигрыш',recipient:u.name,comment:'x'+result.mult+' · ставка не попала'});
-      saveUser();
-      toast('Выпало '+result.label+'. Проигрыш '+total+' HSC',false);
-    }
-    rlHistory.unshift(result.mult);
-    if(rlHistory.length>12)rlHistory.pop();
-    rlRenderHistory();
-    rlBets={2:0,3:0,5:0,10:0,50:0,100:0};
-    rlRenderBets();
-    renderAll();
-    showRlResult(result,totalWon,won,total);
-  },5200);
-}
-function showRlResult(result,totalWon,won,totalBet){
-  var ov=document.getElementById('rlResult');
-  var pz=document.getElementById('rlPrize');
-  var sub=document.getElementById('rlSub');
-  pz.className='frp x'+result.mult+'c';
-  pz.textContent='x'+result.mult;
-  if(won>0)sub.innerHTML='Выиграл <b style="color:var(--gd)">'+totalWon.toLocaleString('ru-RU')+' HSC</b>';
-  else sub.innerHTML='Не повезло. Потерял '+totalBet.toLocaleString('ru-RU')+' HSC';
-  ov.classList.add('on');
-  if(navigator.vibrate){if(won>0)navigator.vibrate([100,50,100]);else navigator.vibrate([200])}
-}
+function rlConfirm(){if(rlSpinning)return;var total=0;for(var k in rlBets)total+=rlBets[k];if(total<=0)return toast('Поставь хотя бы на один сектор',false);var u=getUser();if(!u)return;if(total>u.balance)return toast('Недостаточно HSC',false);u.balance-=total;saveUser();renderBalance();rlUpdateAvail();rlSpinning=true;var btn=document.getElementById('rlSpinBtn');btn.disabled=true;btn.textContent='КРУТИТСЯ...';var result=rlPick();var totalW=0;RL_SECTORS.forEach(function(s){totalW+=s.weight});var start=-90;var center=0;var arcLen=0;for(var i=0;i<RL_SECTORS.length;i++){var arc=(RL_SECTORS[i].weight/totalW)*360;if(RL_SECTORS[i].mult===result.mult){center=start+arc/2;arcLen=arc;break}start+=arc}var spins=8+Math.floor(Math.random()*4);var jitter=(Math.random()-0.5)*(arcLen*0.5);var targetAngle=spins*360-(center+90)+jitter;rlAngle+=targetAngle;var wheel=document.getElementById('rlWheel');wheel.style.transition='transform 5s cubic-bezier(.17,.67,.32,1.02)';wheel.style.transform='rotate('+rlAngle+'deg)';setTimeout(function(){rlSpinning=false;btn.disabled=false;btn.textContent='КРУТИТЬ';var won=rlBets[result.mult];var totalWon=won*result.mult;if(won>0){u.balance+=totalWon;addTx({type:'in',category:'roulette',name:'Рулетка: выпало '+result.label+' (ставка '+won+' HSC)',amount:totalWon,date:Date.now(),status:'Выигрыш',recipient:u.name,comment:'x'+result.mult+' · всего ставил '+total+' HSC'});saveUser();toast('🎉 Выпало '+result.label+'! Выиграл '+totalWon.toLocaleString('ru-RU')+' HSC',true)}else{addTx({type:'out',category:'roulette',name:'Рулетка: выпало '+result.label,amount:total,date:Date.now(),status:'Проигрыш',recipient:u.name,comment:'x'+result.mult+' · ставка не попала'});saveUser();toast('Выпало '+result.label+'. Проигрыш '+total+' HSC',false)}rlHistory.unshift(result.mult);if(rlHistory.length>12)rlHistory.pop();rlRenderHistory();rlBets={2:0,3:0,5:0,10:0,50:0,100:0};rlRenderBets();renderAll();showRlResult(result,totalWon,won,total)},5200)}
+function showRlResult(result,totalWon,won,totalBet){var ov=document.getElementById('rlResult');var pz=document.getElementById('rlPrize');var sub=document.getElementById('rlSub');pz.className='frp x'+result.mult+'c';pz.textContent='x'+result.mult;if(won>0)sub.innerHTML='Выиграл <b style="color:var(--gd)">'+totalWon.toLocaleString('ru-RU')+' HSC</b>';else sub.innerHTML='Не повезло. Потерял '+totalBet.toLocaleString('ru-RU')+' HSC';ov.classList.add('on');if(navigator.vibrate){if(won>0)navigator.vibrate([100,50,100]);else navigator.vibrate([200])}}
 function closeRlResult(){document.getElementById('rlResult').classList.remove('on')}
 
-/* ========= MINES ========= */
+/* MINES */
 var minesBombCount=2,minesBet=0,minesActive=false,minesOpened=[],minesBombs=[],minesCurrentMult=1;
 function minesBuild(){var row=document.getElementById('minesBombRow');if(row&&row.children.length===0){var counts=[1,2,3,5,10,15,24];var h='';counts.forEach(function(c){h+='<button class="mines-bomb-btn'+(c===minesBombCount?' active':'')+'" onclick="minesSetBombs('+c+',this)">'+c+'</button>'});row.innerHTML=h}}
 function minesSetBombs(c,btn){if(minesActive)return toast('Игра активна',false);minesBombCount=c;document.querySelectorAll('.mines-bomb-btn').forEach(function(b){b.classList.remove('active')});if(btn)btn.classList.add('active');document.getElementById('minesBombCount').textContent=c+(c===1?' бомба':c<5?' бомбы':' бомб')}
@@ -1309,7 +1132,7 @@ function minesOpen(idx){if(!minesActive)return;if(minesOpened.indexOf(idx)>=0)re
 function minesAction(){if(minesActive){minesActive=false;var u=getUser();if(!u)return;var total=minesBet*minesCurrentMult;var profit=total-minesBet;u.balance+=total;addTx({type:'in',category:'mines',name:'Mines: забрал x'+minesCurrentMult.toFixed(2),amount:total,date:Date.now(),status:'Выигрыш',recipient:u.name,comment:'Ставка '+minesBet+' HSC · прибыль '+profit.toFixed(2)});saveUser();toast('Забрал '+total.toFixed(2)+' HSC (x'+minesCurrentMult.toFixed(2)+')',true);document.getElementById('minesInfo').innerHTML='✅ Забрал <b>'+total.toFixed(2)+' HSC</b>';var btn=document.getElementById('minesGoBtn');btn.textContent='Начать';btn.className='mines-go start';renderAll();return}var u=getUser();if(!u)return;var bet=parseFloat(document.getElementById('minesBet').value)||0;if(bet<=0)return toast('Введите ставку',false);if(bet>u.balance)return toast('Недостаточно HSC',false);minesBet=bet;u.balance-=bet;saveUser();renderBalance();minesActive=true;minesOpened=[];minesCurrentMult=1;minesBombs=[];while(minesBombs.length<minesBombCount){var b=Math.floor(Math.random()*25);if(minesBombs.indexOf(b)<0)minesBombs.push(b)}document.getElementById('minesInfo').innerHTML='Открывай клетки.';var btn=document.getElementById('minesGoBtn');btn.textContent='Забрать';btn.className='mines-go cash';minesRender()}
 function minesStop(){minesActive=false}
 
-/* ========= ROCKET ========= */
+/* ROCKET */
 var rocketRunning=false,rocketCrashed=false,rocketMult=1,rocketBet=0,rocketRAF=null,rocketStart=0,rocketCrashAt=1,rocketHistory=[],rocketPath=[];
 function rocketSetBet(v){var u=getUser();if(!u)return;var input=document.getElementById('rocketBet');if(v==='max'){input.value=Math.floor(u.balance)}else{input.value=v}}
 function rocketUpdateAvail(){var u=getUser();if(!u)return;var el=document.getElementById('rocketAvail');if(el)el.textContent=Number(u.balance).toLocaleString('ru-RU',{maximumFractionDigits:2})+' HSC';var bl=document.getElementById('rocketBest');if(bl)bl.textContent=(u.rocketBest||0)>0?('x'+(u.rocketBest||0).toFixed(2)):'—'}
@@ -1324,7 +1147,7 @@ function rocketRenderHistory(){var box=document.getElementById('rocketHistory');
 function rocketStop(){rocketRunning=false;if(rocketRAF)cancelAnimationFrame(rocketRAF)}
 window.addEventListener('resize',function(){rocketResize()})
 
-/* ========= EXCHANGE ========= */
+/* EXCHANGE */
 var exTF='1m',exChartType='candle',exMAOn={7:true,25:false},exZoom=1,exLive=true,exSide='buy';
 function exResize(){var canvas=document.getElementById('exChartCanvas');var wrap=document.getElementById('exChartWrap');if(!canvas||!wrap)return;var DPR=Math.max(1,window.devicePixelRatio||1);var w=wrap.clientWidth,h=wrap.clientHeight;if(w<10||h<10)return;canvas.width=w*DPR;canvas.height=h*DPR;canvas.style.width=w+'px';canvas.style.height=h+'px';var ctx=canvas.getContext('2d');ctx.setTransform(DPR,0,0,DPR,0,0);canvas._ctx=ctx;canvas._w=w;canvas._h=h}
 function exVisibleCandles(){var total=CANDLES.length;var viewCount=Math.max(30,Math.floor(80/exZoom));var end=total;var start=Math.max(0,end-viewCount);return CANDLES.slice(start,end)}
@@ -1348,7 +1171,7 @@ function exSubmitTrade(){var u=getUser();if(!u)return;var amt=parseFloat(documen
 function startLiveTickers(){stopLiveTickers();seedHistory();priceTimer=setInterval(function(){COIN_RATE=nextPrice();pushPrice(COIN_RATE);if(Math.random()<0.4){TRADE_TAPE.unshift({t:Date.now(),p:COIN_RATE*(1+(Math.random()-0.5)*0.003),a:(Math.random()*500+10).toFixed(0),side:Math.random()<0.5?'buy':'sell'});if(TRADE_TAPE.length>40)TRADE_TAPE.pop()}updateCoinRate();if(document.getElementById('view-exchange').classList.contains('on')){exRenderTop();exRenderOrderbook();exRenderTape();if(exLive)exDraw()}},2000);uiTimer=setInterval(function(){},1000)}
 function stopLiveTickers(){if(priceTimer)clearInterval(priceTimer);if(uiTimer)clearInterval(uiTimer)}
 
-/* ===== CASES ===== */
+/* CASES */
 var CASES=[
   {id:'bronze',name:'Бронза',cls:'case-bronze',price:500,icon:'◆',rarity:'Bronze',desc:'Базовый кейс с высоким EV.',ev:'EV ≈ +55%',pool:[{v:100,w:22},{v:250,w:24},{v:500,w:20},{v:800,w:14},{v:1500,w:10},{v:3000,w:6},{v:7500,w:3},{v:25000,w:1}]},
   {id:'silver',name:'Серебро',cls:'case-silver',price:2000,icon:'◆',rarity:'Silver',desc:'Хороший средний возврат.',ev:'EV ≈ +70%',pool:[{v:500,w:20},{v:1000,w:22},{v:2000,w:20},{v:3500,w:16},{v:7000,w:12},{v:15000,w:7},{v:50000,w:2.5},{v:250000,w:0.5}]},
